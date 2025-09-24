@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MetaMask Login</title>
+</head>
+<body>
+  <h1>Welcome</h1>
+  <button id="loginBtn">Login with MetaMask</button>
+
+  <script>
+    const userAddress = "0xdFE738eD4f4f9Bf1a68bA2b467bD8bAAEe47EF6b";      // Replace with one Ganache account for user
+    const verifierAddress = "0xB5132c59CAd35b400C23A09DAE5953cF4D793E07";  // Replace with another Ganache account for verifier
+
+    async function loginWithMetaMask() {
+      if (typeof window.ethereum === "undefined") {
+        alert("MetaMask not found. Please install it.");
+        return;
+      }
+
+      try {
+        // Request accounts from MetaMask
+        const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+        const account = accounts[0].toLowerCase();
+
+        // Decide page based on account
+        if (account === userAddress.toLowerCase()) {
+          window.location.href = "user.html";
+        } else if (account === verifierAddress.toLowerCase()) {
+          window.location.href = "verifier.html";
+        } else {
+          alert("This account is not registered as user or verifier.");
+        }
+
+      } catch (error) {
+        console.error(error);
+        alert("Login failed.");
+      }
+    }
+
+    document.getElementById("loginBtn").addEventListener("click", loginWithMetaMask);
+  </script>
+</body>
+</html>

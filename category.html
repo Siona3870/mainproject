@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Incident - Category</title>
+</head>
+<body>
+    <h1>Select Incident Category</h1>
+    <button onclick="goToForm('Transportation')">Transportation</button>
+    <button onclick="goToForm('Public Infrastructure')">Public Infrastructure</button>
+    <button onclick="goToForm('Water and Sanitation')">Water & Sanitation</button>
+    <button onclick="goToForm('Safety and Security')">Safety & Security</button>
+
+    <script>
+        function goToForm(category) {
+            // Pass the selected category as a query parameter
+            window.location.href = `report.html?category=${category}`;
+        }
+    </script>
+</body>
+</html>

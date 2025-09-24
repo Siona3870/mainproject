@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, User!</h1>
+    <button id="reportBtn">Report</button>
+    <button id="viewBtn">View</button>
+
+    <script>
+        document.getElementById("reportBtn").addEventListener("click", function() {
+            window.location.href = "category.html";
+        });
+
+        document.getElementById("viewBtn").addEventListener("click", function() {
+            window.location.href = "user_view.html"; // later implement list of incidents
+        });
+    </script>
+</body>
+</html>
