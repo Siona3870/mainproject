@@ -1,410 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Incident Reporting System</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --primary: #1B3C53;
-      --secondary: #234C6A;
-      --accent: #456882;
-      --light: #ffffff;
-      --success: #2ecc71;
-      --warning: #f39c12;
-      --radius: 8px;
-      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    body {
-      background: linear-gradient(135deg, var(--light) 0%, #dbe6ea 100%);
-      color: var(--primary);
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    
-    header {
-      background-color: var(--primary);
-      color: var(--light);
-      padding: 1rem 0;
-      box-shadow: var(--shadow);
-      position: relative;
-    }
-    
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .logo {
-      font-size: 1.8rem;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .logo i {
-      color: var(--success);
-    }
-    
-    .account-info {
-      display: flex;
-      align-items: center;
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius);
-      font-size: 0.9rem;
-      color: var(--light);
-    }
-    
-    .status-light {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      margin-right: 8px;
-    }
-    
-    .light-off {
-      background-color: #95a5a6;
-    }
-    
-    .light-on {
-      background-color: var(--success);
-      animation: blink 2s infinite;
-    }
-    
-    @keyframes blink {
-      0% { opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
-    
-    main {
-      padding: 2rem 0;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .login-card {
-      background-color: white;
-      padding: 2.5rem;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      text-align: center;
-      width: 100%;
-      max-width: 500px;
-      animation: fadeIn 0.8s ease-out;
-    }
-    
-    .login-card h1 {
-      color: var(--primary);
-      margin-bottom: 1.5rem;
-      font-size: 2.2rem;
-      font-weight: 700;
-      background: linear-gradient(to right, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    .btn {
-      background-color: var(--secondary);
-      color: white;
-      border: none;
-      padding: 1.2rem 2rem;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      margin-top: 1rem;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: 0.5s;
-    }
-    
-    .btn:hover::before {
-      left: 100%;
-    }
-    
-    .btn:hover {
-      background-color: var(--accent);
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-    }
-    
-    .btn-metamask {
-      background: linear-gradient(135deg, #456882, #234C6A);
-    }
-    
-    .btn-metamask:hover {
-      background: linear-gradient(135deg, #234C6A, #456882);
-    }
-    
-    .status {
-      margin-top: 1rem;
-      padding: 0.8rem;
-      border-radius: var(--radius);
-      font-size: 0.9rem;
-    }
-    
-    .status-success {
-      background-color: rgba(46, 204, 113, 0.2);
-      color: #27ae60;
-      border-left: 4px solid var(--success);
-    }
-    
-    .status-error {
-      background-color: rgba(231, 76, 60, 0.2);
-      color: #c0392b;
-      border-left: 4px solid #e74c3c;
-    }
-    
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .modal-content {
-      background-color: white;
-      padding: 2rem;
-      border-radius: var(--radius);
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      animation: fadeIn 0.3s ease-out;
-    }
-    
-    .modal h2 {
-      margin-bottom: 1rem;
-      color: var(--primary);
-    }
-    
-    .modal p {
-      margin-bottom: 1.5rem;
-      color: var(--accent);
-    }
-    
-    .modal-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-    }
-    
-    .btn-secondary {
-      background: linear-gradient(135deg, #95a5a6, #7f8c8d);
-    }
-    
-    .btn-secondary:hover {
-      background: linear-gradient(135deg, #7f8c8d, #95a5a6);
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @media (max-width: 768px) {
-      .header-content {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      
-      .logo {
-        text-align: center;
-        margin-bottom: 1rem;
-      }
-      
-      .account-info {
-        position: static;
-        margin-top: 1rem;
-      }
-      
-      .login-card {
-        padding: 1.5rem;
-      }
-      
-      .btn {
-        padding: 1rem 1.5rem;
-        font-size: 1rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Incident - Category Selection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1B3C53;
+            --secondary: #234C6A;
+            --accent: #456882;
+            --light: #ffffff;
+            --dark: #1B3C53;
+            --success: #2ecc71;
+            --radius: 10px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light) 0%, #dbe6ea 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--success);
+        }
+
+
+        .status-light {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .light-on {
+            background-color: var(--success);
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        main {
+            padding: 2rem 0;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .category-container {
+            text-align: center;
+            width: 100%;
+            padding: 2rem 0;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .category-header {
+            margin-bottom: 3rem;
+        }
+
+        .category-header h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .category-header p {
+            font-size: 1.2rem;
+            color: var(--accent);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .category-grid {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category-card {
+            background: var(--light);
+            border-radius: var(--radius);
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 250px;
+            min-height: 280px;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .category-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .category-card:hover .category-icon {
+            transform: scale(1.1);
+        }
+
+        .transportation .category-icon {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .infrastructure .category-icon {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .water .category-icon {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+
+        .safety .category-icon {
+            background: linear-gradient(135deg, #f39c12, #d35400);
+        }
+
+        .category-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .category-desc {
+            color: var(--accent);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 1100px) {
+            .category-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .logo {
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+
+            .category-header h1 {
+                font-size: 2.2rem;
+            }
+
+            .category-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .category-card {
+                width: 100%;
+                max-width: 320px;
+                margin: 0 auto;
+                padding: 1.5rem 1rem;
+                min-height: 220px;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Animation for category cards */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-card {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .category-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .category-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .category-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .category-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="container header-content">
-      <div class="logo">
-        <i class="fas fa-shield-alt"></i>
-        Incident Reporting System
-      </div>
-      <div class="account-info" id="accountInfo">
-        <div class="status-light light-off" id="statusLight"></div>
-        <span id="connectionText">Not connected</span>
-      </div>
-    </div>
-  </header>
-  
-  <main class="container">
-    <div class="login-card">
-      <h1>Login with MetaMask</h1>
-      <button id="loginBtn" class="btn btn-metamask">
-        <i class="fab fa-ethereum"></i>
-        Login with MetaMask
-      </button>
-      <div id="statusMessage" class="status"></div>
-    </div>
-  </main>
-  
-  <div id="errorModal" class="modal">
-    <div class="modal-content">
-      <h2>Authentication Error</h2>
-      <p id="errorMessage">This account is not registered as user or verifier.</p>
-      <div class="modal-buttons">
-        <button id="closeModal" class="btn btn-secondary">Close</button>
-      </div>
-    </div>
-  </div>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                Incident Reporting System
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="category-container">
+            <div class="category-header">
+                <h1>Select Incident Category</h1>
+                <p>Choose the category that best describes the issue you want to report</p>
+            </div>
+            
+            <div class="category-grid">
+                <div class="category-card transportation" onclick="goToForm('Transportation')">
+                    <div class="category-icon">
+                        <i class="fas fa-bus"></i>
+                    </div>
+                    <h3 class="category-title">Transportation</h3>
+                    <p class="category-desc">Road issues, traffic problems, public transit concerns</p>
+                </div>
+                
+                <div class="category-card infrastructure" onclick="goToForm('Public Infrastructure')">
+                    <div class="category-icon">
+                        <i class="fas fa-road"></i>
+                    </div>
+                    <h3 class="category-title">Public Infrastructure</h3>
+                    <p class="category-desc">Bridges, buildings, public facilities, utilities</p>
+                </div>
+                
+                <div class="category-card water" onclick="goToForm('Water and Sanitation')">
+                    <div class="category-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <h3 class="category-title">Water & Sanitation</h3>
+                    <p class="category-desc">Water supply, drainage, sanitation facilities</p>
+                </div>
+                
+                <div class="category-card safety" onclick="goToForm('Safety and Security')">
+                    <div class="category-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="category-title">Safety & Security</h3>
+                    <p class="category-desc">Public safety concerns, security issues, hazards</p>
+                </div>
+            </div>
+        </div>
+    </main>
 
-  <script>
-    const verifierAddress = "0xB5132c59CAd35b400C23A09DAE5953cF4D793E07";
-
-    const loginBtn = document.getElementById('loginBtn');
-    const connectionText = document.getElementById('connectionText');
-    const statusLight = document.getElementById('statusLight');
-    const statusMessage = document.getElementById('statusMessage');
-    const errorModal = document.getElementById('errorModal');
-    const errorMessage = document.getElementById('errorMessage');
-    const closeModal = document.getElementById('closeModal');
-
-    window.addEventListener('load', function() {
-      if (typeof window.ethereum === "undefined") {
-        loginBtn.innerHTML = '<i class="fab fa-ethereum"></i> MetaMask Not Found';
-        loginBtn.disabled = true;
-        loginBtn.style.background = "linear-gradient(135deg, #95a5a6, #7f8c8d)";
-        statusMessage.textContent = "Please install MetaMask to continue";
-        statusMessage.className = "status status-error";
-        statusLight.className = "status-light light-off";
-      } else {
-        statusMessage.textContent = "MetaMask detected. Click to login.";
-        statusMessage.className = "status status-success";
-        statusLight.className = "status-light light-on";
+    <script>
+        function goToForm(category) {
+            // Add click animation
+            event.currentTarget.style.transform = "scale(0.95)";
+            setTimeout(() => {
+                // Pass the selected category as a query parameter
+                window.location.href = `report.html?category=${category}`;
+            }, 200);
+        }
         
-        ethereum.request({ method: 'eth_accounts' })
-          .then(accounts => {
-            if (accounts.length > 0) {
-              updateAccountInfo(accounts[0]);
+        // Initialize page
+        function initPage() {
+            const userAddress = localStorage.getItem('userAddress');
+            if (userAddress) {
+                const shortAddress = `${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`;
+                document.getElementById('connectionText').textContent = `Reporting as: ${shortAddress}`;
             }
-          })
-          .catch(err => {
-            console.error(err);
-          });
-      }
-    });
-
-    async function loginWithMetaMask() {
-      if (typeof window.ethereum === "undefined") {
-        showError("MetaMask not found. Please install it.");
-        return;
-      }
-
-      try {
-        const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-        const account = accounts[0].toLowerCase();
-        updateAccountInfo(account);
-        
-        // If account is verifier -> verifier page, else -> user page
-        if (account === verifierAddress.toLowerCase()) {
-          window.location.href = "verifier.html";
-        } else {
-          window.location.href = "user.html";
         }
 
-      } catch (error) {
-        console.error(error);
-        if (error.code === 4001) {
-          showError("Login rejected. Please connect your MetaMask account.");
-        } else {
-          showError("Login failed. Please try again.");
-        }
-      }
-    }
+        // Add hover effects with JavaScript for additional interactivity
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+            });
+        });
 
-    function updateAccountInfo(account) {
-      const shortAddress = `${account.substring(0, 6)}...${account.substring(account.length - 4)}`;
-      connectionText.textContent = `Connected: ${shortAddress}`;
-      statusLight.className = "status-light light-on";
-    }
-
-    function showError(message) {
-      errorMessage.textContent = message;
-      errorModal.style.display = "flex";
-    }
-
-    loginBtn.addEventListener("click", loginWithMetaMask);
-    closeModal.addEventListener("click", () => {
-      errorModal.style.display = "none";
-    });
-
-    window.addEventListener("click", (event) => {
-      if (event.target === errorModal) {
-        errorModal.style.display = "none";
-      }
-    });
-
-    if (typeof window.ethereum !== "undefined") {
-      ethereum.on('accountsChanged', (accounts) => {
-        if (accounts.length === 0) {
-          connectionText.textContent = "Not connected";
-          statusLight.className = "status-light light-off";
-        } else {
-          updateAccountInfo(accounts[0]);
-        }
-      });
-    }
-  </script>
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
 </body>
 </html>
